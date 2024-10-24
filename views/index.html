@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>C++ Code Analyzer</title>
+    <link rel="stylesheet" href="/css/styles.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+</head>
+<body>
+    <header>
+        <h1>C++ Code Analyzer</h1>
+        <p>Enter your C++ code snippet below to get an analysis and explanation.</p>
+    </header>
+    
+    <main>
+        <section id="code-input">
+            <textarea id="codeInput" placeholder="Paste your C++ code here..."></textarea>
+            <button id="analyzeBtn">Analyze Code</button>
+            <button id="clearBtn">Clear Code</button>
+        </section>
+
+        <section id="analysis-output">
+            <h2>Code Analysis</h2>
+            <div id="output"></div>
+        </section>
+
+        <button id="downloadBtn">Download Analysis as PDF</button>
+    </main>
+
+    <script src="/js/main.js"></script>
+</body>
+</html>
