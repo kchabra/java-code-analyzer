@@ -1,11 +1,18 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>C++ Code Analyzer</title>
     <link rel="stylesheet" href="/css/styles.css">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <!-- Include Prism.js for syntax highlighting -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.27.0/themes/prism-tomorrow.min.css" rel="stylesheet" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.27.0/prism.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.27.0/components/prism-cpp.min.js"></script>
+    <!-- Include Monaco Editor -->
+    <script src="https://cdn.jsdelivr.net/npm/monaco-editor@0.28.1/min/vs/loader.js"></script>
+
 </head>
 <body>
     <header>
@@ -15,7 +22,8 @@
     
     <main>
         <section id="code-input">
-            <textarea id="codeInput" placeholder="Paste your C++ code here..."></textarea>
+            <!-- Monaco Editor will replace this div -->
+            <div id="codeInput" style="height: 300px; width: 100%; border: 1px solid #ddd;"></div>
             <button id="analyzeBtn">Analyze Code</button>
             <button id="clearBtn">Clear Code</button>
         </section>
@@ -28,6 +36,7 @@
         <button id="downloadBtn">Download Analysis as PDF</button>
     </main>
 
+    <!-- Load the main.js script -->
     <script src="/js/main.js"></script>
 </body>
 </html>
