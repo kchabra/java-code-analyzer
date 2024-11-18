@@ -29,6 +29,17 @@ header {
     width: 100%; 
 }
 
+#visual-container {
+    width: 100%;
+    padding: 1rem;
+    background-color: #f8f8f8;
+    border: 1px solid #ddd;
+    height: 250px;
+    overflow: auto;
+    font-size: 1rem;
+    display: none; /* Hidden by default */
+}
+
 #codeInput {
     height: 400px; 
     width: 100%; 
@@ -62,4 +73,83 @@ button {
 main {
     width: 90%; 
     max-width: 1200px; 
+}
+
+/* General Toggle Styling */
+.toggle-container {
+    display: flex;
+    flex-direction: column; /* Align toggles vertically */
+    align-items: flex-start; /* Align content to the left */
+    gap: 1rem;
+    margin: 1rem 0;
+}
+
+.toggle-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 1rem; /* Space between text and toggle slider */
+}
+
+.toggle-label {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 1rem;
+    font-weight: bold;
+    color: #333;
+    position: relative;
+    cursor: pointer;
+}
+
+.toggle-slider {
+    position: relative;
+    display: inline-block;
+    width: 60px;
+    height: 28px;
+    background-color: #ddd;
+    border-radius: 15px;
+    transition: background-color 0.3s;
+}
+
+.toggle-slider::after {
+    content: '';
+    position: absolute;
+    top: 3px;
+    left: 3px;
+    width: 22px;
+    height: 22px;
+    background-color: white;
+    border-radius: 50%;
+    transition: transform 0.3s;
+}
+
+.toggle-input {
+    display: none;
+}
+
+.toggle-input:checked + .toggle-slider {
+    background-color: #007bff;
+}
+
+.toggle-input:checked + .toggle-slider::after {
+    transform: translateX(32px);
+}
+
+/* High-Level/Detailed Toggle Text */
+.toggle-wrapper span:first-child {
+    color: #555; /* Left-side text styling */
+}
+
+.toggle-wrapper span:last-child {
+    color: #555; /* Right-side text styling */
+    margin-left: auto; /* Space between slider and text */
+}
+
+/* Radio Button Group Styling */
+input[type="radio"]:checked + .toggle-slider {
+    background-color: #28a745;
+}
+
+input[type="radio"]:not(:checked) + .toggle-slider {
+    background-color: #ddd;
 }
