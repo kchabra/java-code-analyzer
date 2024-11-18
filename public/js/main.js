@@ -25,7 +25,7 @@ document.addEventListener('DOMContentLoaded', function () {
             headers: {
                 'Content-Type': 'application/json',
             },
-            body: JSON.stringify({ code, explanationType }),
+            body: JSON.stringify({ code, explanationType, visualOutput }),
         });
 
         if (response.ok) {
@@ -57,37 +57,6 @@ document.addEventListener('DOMContentLoaded', function () {
         document.getElementById('output').innerText = '';
         document.getElementById('visual-container').innerHTML = ''; // Clear visual container
         document.getElementById('visual-container').style.display = 'none';
-    });
-
-    // Download functionality
-    document.getElementById('downloadBtn').addEventListener('click', () => {
-        if (!window.jspdf || !window.jspdf.jsPDF) {
-            alert('jsPDF is not loaded properly!');
-            return;
-        }
-
-        const { jsPDF } = window.jspdf;
-        const code = editor.getValue();
-        const analysis = document.getElementById('output').innerText;
-
-        if (analysis) {
-            const doc = new jsPDF();
-            doc.setFontSize(12);
-
-            doc.text('Code Snippet:', 10, 10);
-            const codeLines = doc.splitTextToSize(code, 180);
-            doc.text(codeLines, 10, 20);
-
-            const yPosForAnalysis = 30 + codeLines.length * 5;
-
-            doc.text('Code Analysis:', 10, yPosForAnalysis);
-            const analysisLines = doc.splitTextToSize(analysis, 180);
-            doc.text(analysisLines, 10, yPosForAnalysis + 10);
-
-            doc.save('code_analysis.pdf');
-        } else {
-            alert('No analysis to download.');
-        }
     });
 
     // Toggle for explanation type (High-Level/Detailed)

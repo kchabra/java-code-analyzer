@@ -9,10 +9,9 @@
     <!-- Include Prism.js for syntax highlighting -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.27.0/themes/prism-tomorrow.min.css" rel="stylesheet" />
     <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.27.0/prism.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.27.0/components/prism-cpp.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.27.0/components/prism-java.min.js"></script>
     <!-- Include Monaco Editor -->
     <script src="https://cdn.jsdelivr.net/npm/monaco-editor@0.28.1/min/vs/loader.js"></script>
-
 </head>
 <body>
     <header>
@@ -32,26 +31,29 @@
             <h2>Code Analysis</h2>
             <div class="toggle-container">
                 <!-- High-Level/Detailed Toggle -->
-        <div class="toggle-wrapper">
-            <label for="explanationToggle" class="toggle-label">
-                <span>High-Level Analysis</span>
-                <input type="checkbox" id="explanationToggle" class="toggle-input">
-                <span class="toggle-slider"></span>
-                <span>Detailed Analysis</span>
-            </label>
-        </div>
-        <!-- Visual Output Toggle -->
-        <div class="toggle-wrapper">
-            <label for="visualToggle" class="toggle-label">
-                <span>Text Output Only</span>
-                <input type="checkbox" id="visualToggle" class="toggle-input">
-                <span class="toggle-slider"></span>
-                <span>Include Visual Output</span>
-            </label>
-        </div>
-    </div>
-            <div id="output"></div>
-            <div id="visual-container" style="display: none;"></div>
+                <div class="toggle-wrapper">
+                    <label for="explanationToggle" class="toggle-label">
+                        <span>High-Level Analysis</span>
+                        <input type="checkbox" id="explanationToggle" class="toggle-input">
+                        <span class="toggle-slider"></span>
+                        <span>Detailed Analysis</span>
+                    </label>
+                </div>
+                <!-- Visual Output Toggle -->
+                <div class="toggle-wrapper">
+                    <label for="visualToggle" class="toggle-label">
+                        <span>Text Output Only</span>
+                        <input type="checkbox" id="visualToggle" class="toggle-input">
+                        <span class="toggle-slider"></span>
+                        <span>Include Visual Output</span>
+                    </label>
+                </div>
+            </div>
+
+            <div id="output-container">
+                <div id="output"></div>
+                <div id="visual-container"></div>
+            </div>
         </section>
 
         <button id="downloadBtn">Download Analysis as PDF</button>

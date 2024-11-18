@@ -14,7 +14,7 @@ app.get('/', (req, res) => {
 
 // Handle POST request for code analysis
 app.post('/analyze', (req, res) => {
-    const { code, explanationType } = req.body;
+    const { code, explanationType, visualOutput } = req.body;
 
     // Hardcoded Java examples
     const example1 = `public class SumCalculator {
@@ -43,9 +43,10 @@ app.post('/analyze', (req, res) => {
     }
 }`;
 
-    let analysis;
+    let analysis = '';
+    let visualAnalysis = '';
 
-    // High-level and detailed explanations
+    // High-level and detailed explanations with visual analysis
     if (code.trim() === example1) {
         if (explanationType === 'high') {
             analysis = `
@@ -62,6 +63,10 @@ app.post('/analyze', (req, res) => {
                 <li><strong>Suggestions:</strong> Expand functionality to allow dynamic user input for the integers.</li>
             </ul>
             `;
+            visualAnalysis = `
+            <h3>High-Level Flowchart: Sum Calculator</h3>
+            <img src="/images/high_level_sum_calculator.png" alt="High-Level Sum Calculator Flowchart" style="width: 100%; max-width: 400px; height: auto; margin-top: 10px;">
+            `;
         } else if (explanationType === 'detailed') {
             analysis = `
             <h3>Sum Calculator Detailed Analysis</h3>
@@ -73,6 +78,10 @@ app.post('/analyze', (req, res) => {
                 <li><strong>Line 5:</strong> <code>System.out.println("The sum is: " + sum);</code> - Prints the calculated sum to the console.</li>
                 <li><strong>Suggestions:</strong> Replace hardcoded values with user input using <code>Scanner</code> for more flexibility.</li>
             </ul>
+            `;
+            visualAnalysis = `
+            <h3>Detailed Flowchart: Sum Calculator</h3>
+            <img src="/images/detailed_sum_calculator.png" alt="Detailed Sum Calculator Flowchart" style="width: 100%; max-width: 400px; height: auto; margin-top: 10px;">
             `;
         }
     } else if (code.trim() === example2) {
@@ -91,6 +100,10 @@ app.post('/analyze', (req, res) => {
                 <li><strong>Suggestions:</strong> Allow user input for broader functionality and handle edge cases like empty strings.</li>
             </ul>
             `;
+            visualAnalysis = `
+            <h3>High-Level Flowchart: Palindrome Checker</h3>
+            <img src="/images/high_level_palindrome_checker.png" alt="High-Level Palindrome Checker Flowchart" style="width: 100%; max-width: 400px; height: auto; margin-top: 10px;">
+            `;
         } else if (explanationType === 'detailed') {
             analysis = `
             <h3>Palindrome Checker Detailed Analysis</h3>
@@ -102,19 +115,20 @@ app.post('/analyze', (req, res) => {
                 <li><strong>Line 5:</strong> <code>if (str.charAt(i) != str.charAt(n - i - 1))</code> - Compares characters from the start and end of the string.</li>
                 <li><strong>Line 6:</strong> <code>return false;</code> - Returns false if a mismatch is found.</li>
                 <li><strong>Line 7:</strong> <code>return true;</code> - Returns true if no mismatches are found.</li>
-                <li><strong>Line 8:</strong> <code>public static void main(String[] args)</code> - Main method that serves as the program's entry point.</li>
-                <li><strong>Line 9:</strong> <code>String str = "madam";</code> - Declares and initializes a string variable with the value <code>"madam"</code>.</li>
-                <li><strong>Line 10:</strong> <code>boolean result = isPalindrome(str);</code> - Calls the <code>isPalindrome()</code> method and stores the result.</li>
-                <li><strong>Line 11:</strong> <code>System.out.println("Is the string a palindrome? " + result);</code> - Prints the result of the palindrome check.</li>
                 <li><strong>Suggestions:</strong> Enhance the program to handle special characters, spaces, and case-insensitivity.</li>
             </ul>
+            `;
+            visualAnalysis = `
+            <h3>Detailed Flowchart: Palindrome Checker</h3>
+            <img src="/images/detailed_palindrome_checker.png" alt="Detailed Palindrome Checker Flowchart" style="width: 100%; max-width: 400px; height: auto; margin-top: 10px;">
             `;
         }
     } else {
         analysis = '<p>Failed to analyze the code. Please try again with a valid example.</p>';
+        visualAnalysis = '';
     }
 
-    res.json({ analysis });
+    res.json({ analysis, visualAnalysis });
 });
 
 // Start server

@@ -17,6 +17,16 @@ header {
 #code-input, #analysis-output {
     width: 90%; 
     margin: 1.5rem auto;
+    display: flex;
+    flex-direction: column;
+}
+
+#output-container {
+    display: flex;
+    flex-direction: row; /* Align text and visual output side by side */
+    gap: 1rem;
+    justify-content: space-between;
+    width: 100%;
 }
 
 #output {
@@ -26,11 +36,11 @@ header {
     height: 250px;
     overflow: auto;
     font-size: 1rem;
-    width: 100%; 
+    width: 48%; /* Adjust for side-by-side layout */
 }
 
 #visual-container {
-    width: 100%;
+    width: 48%; /* Adjust for side-by-side layout */
     padding: 1rem;
     background-color: #f8f8f8;
     border: 1px solid #ddd;
