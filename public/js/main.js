@@ -59,6 +59,56 @@ document.addEventListener('DOMContentLoaded', function () {
         document.getElementById('visual-container').style.display = 'none';
     });
 
+    document.getElementById('downloadBtn').addEventListener('click', async () => {
+        if (!window.jspdf || !window.jspdf.jsPDF) {
+            alert('jsPDF is not loaded properly!');
+            return;
+        }
+    
+        const { jsPDF } = window.jspdf;
+        const code = editor.getValue();
+        const analysis = document.getElementById('output').innerText; // Get textual analysis
+        const visualContainer = document.getElementById('visual-container'); // Visual analysis container
+    
+        const doc = new jsPDF();
+        doc.setFontSize(12);
+    
+        // Add code snippet
+        doc.text('Code Snippet:', 10, 10);
+        const codeLines = doc.splitTextToSize(code, 180);
+        doc.text(codeLines, 10, 20);
+    
+        // Add textual analysis
+        const yPosForAnalysis = 30 + codeLines.length * 5;
+        doc.text('Textual Analysis:', 10, yPosForAnalysis);
+        const analysisLines = doc.splitTextToSize(analysis, 180);
+        doc.text(analysisLines, 10, yPosForAnalysis + 10);
+    
+        // Handle visual analysis if applicable
+        if (visualOutput && visualContainer.style.display !== 'none') {
+            try {
+                // Ensure the container is visible and fully rendered before capturing
+                const canvas = await html2canvas(visualContainer, {
+                    scale: 2, // Increase quality
+                    useCORS: true, // Handle cross-origin resources
+                    allowTaint: true, // Allow tainted images
+                });
+    
+                const imgData = canvas.toDataURL('image/png');
+                const yPosForVisual = yPosForAnalysis + 10 + analysisLines.length * 5;
+                doc.text('Visual Analysis:', 10, yPosForVisual);
+                doc.addImage(imgData, 'PNG', 10, yPosForVisual + 10, 180, 80); // Add visual representation
+            } catch (error) {
+                console.error('Error capturing visual analysis:', error);
+                alert('Failed to add visual analysis to the PDF. Please try again.');
+            }
+        }
+    
+        // Save the PDF
+        doc.save('code_analysis.pdf');
+    });
+    
+
     // Toggle for explanation type (High-Level/Detailed)
     document.getElementById('explanationToggle').addEventListener('change', (e) => {
         explanationType = e.target.checked ? 'detailed' : 'high';
