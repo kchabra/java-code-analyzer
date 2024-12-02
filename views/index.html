@@ -13,8 +13,15 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.27.0/components/prism-java.min.js"></script>
     <!-- Include Monaco Editor -->
     <script src="https://cdn.jsdelivr.net/npm/monaco-editor@0.28.1/min/vs/loader.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
-
+    <!-- Include Mermaid -->
+    <script src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"></script>
+    <script>
+        mermaid.initialize({
+            startOnLoad: true,
+            theme: 'default',
+            securityLevel: 'loose'
+        });
+    </script>
 </head>
 <body>
     <header>
@@ -26,10 +33,33 @@
         <section id="code-input">
             <!-- Monaco Editor will replace this div -->
             <div id="codeInput" style="height: 300px; width: 100%; border: 1px solid #ddd;"></div>
-        <div id="button-container">
-            <button id="analyzeBtn">Analyze Code</button>
-            <button id="clearBtn">Clear Code</button>
-        </div>
+            
+            <!-- Code Stats -->
+            <div id="codeStats" class="code-stats">
+                <div class="complexity-indicator">
+                    <span>Code Complexity:</span>
+                    <div class="complexity-meter">
+                        <div class="complexity-level"></div>
+                    </div>
+                </div>
+                <div class="code-length">
+                    <span>Length:</span>
+                    <span class="length-value">0 lines</span>
+                </div>
+            </div>
+
+            <div id="button-container">
+                <button id="analyzeBtn">Analyze Code</button>
+                <button id="clearBtn">Clear Code</button>
+                
+                <!-- Analysis Progress Container -->
+                <div id="analysisProgress" class="analysis-progress">
+                    <div class="progress-container">
+                        <div class="progress-bar"></div>
+                    </div>
+                    <div id="estimatedTime" class="estimated-time"></div>
+                </div>
+            </div>
         </section>
 
         <section id="analysis-output">
@@ -59,9 +89,23 @@
                 <div id="output"></div>
                 <div id="visual-container"></div>
             </div>
+
+            <!-- Results Actions -->
+            <div class="results-actions">
+                <button id="copyBtn" class="action-btn">
+                    <span class="icon">📋</span> Copy Results
+                </button>
+                <button id="downloadBtn" class="action-btn">
+                    <span class="icon">📥</span> Download Analysis
+                </button>
+            </div>
         </section>
 
-        <button id="downloadBtn">Download Analysis as PDF</button>
+        <!-- Loading Overlay -->
+        <div id="loadingOverlay" class="loading-overlay">
+            <div class="loading-spinner"></div>
+            <div class="loading-text">Analyzing Code...</div>
+        </div>
     </main>
 
     <!-- Load the main.js script -->
