@@ -1,4 +1,28 @@
 document.addEventListener('DOMContentLoaded', function () {
+    // Theme Management
+    const darkModeToggle = document.getElementById('darkModeToggle');
+    
+    // Check for saved theme preference or use system preference
+    const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+    const savedTheme = localStorage.getItem('theme');
+    const theme = savedTheme || (prefersDark ? 'dark' : 'light');
+    
+    // Apply initial theme
+    document.documentElement.setAttribute('data-theme', theme);
+    darkModeToggle.checked = theme === 'dark';
+
+    // Handle theme toggle
+    darkModeToggle.addEventListener('change', (e) => {
+        const newTheme = e.target.checked ? 'dark' : 'light';
+        document.documentElement.setAttribute('data-theme', newTheme);
+        localStorage.setItem('theme', newTheme);
+        
+        // Update Monaco Editor theme if it's initialized
+        if (editor) {
+            monaco.editor.setTheme(newTheme === 'dark' ? 'vs-dark' : 'vs');
+        }
+    });
+
     // Configure Monaco Editor path
     require.config({ paths: { vs: 'https://cdn.jsdelivr.net/npm/monaco-editor@0.28.1/min/vs' } });
     let editor;
@@ -10,7 +34,7 @@ document.addEventListener('DOMContentLoaded', function () {
         editor = monaco.editor.create(document.getElementById('codeInput'), {
             value: "// Type your Java code here...",
             language: 'java',
-            theme: 'vs-dark',
+            theme: theme === 'dark' ? 'vs-dark' : 'vs',
             automaticLayout: true,
             suggestOnTriggerCharacters: true,
         });
@@ -56,11 +80,11 @@ document.addEventListener('DOMContentLoaded', function () {
         
         // Update complexity color based on level
         if (complexity < 30) {
-            complexityLevel.style.backgroundColor = '#28a745';
+            complexityLevel.style.backgroundColor = 'var(--success-color)';
         } else if (complexity < 70) {
             complexityLevel.style.backgroundColor = '#ffc107';
         } else {
-            complexityLevel.style.backgroundColor = '#dc3545';
+            complexityLevel.style.backgroundColor = 'var(--danger-color)';
         }
     }
 
@@ -125,6 +149,15 @@ document.addEventListener('DOMContentLoaded', function () {
         mermaidDiv.innerHTML = content;
         container.innerHTML = '';
         container.appendChild(mermaidDiv);
+        
+        // Update Mermaid theme based on current theme
+        const theme = document.documentElement.getAttribute('data-theme');
+        mermaid.initialize({
+            theme: theme === 'dark' ? 'dark' : 'default',
+            startOnLoad: true,
+            securityLevel: 'loose'
+        });
+        
         mermaid.init(undefined, '.mermaid');
     }
 
