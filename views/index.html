@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="light">
 <head>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
@@ -25,14 +25,26 @@
 </head>
 <body>
     <header>
-        <h1>Java Code Analyzer</h1>
-        <p>Enter your Java code snippet below to get an analysis and explanation.</p>
+        <div class="header-content">
+            <div class="title-section">
+                <h1>Java Code Analyzer</h1>
+                <p>Enter your Java code snippet below to get an analysis and explanation.</p>
+            </div>
+            <div class="theme-toggle">
+                <label for="darkModeToggle" class="theme-toggle-label">
+                    <span class="theme-icon light-icon">☀️</span>
+                    <input type="checkbox" id="darkModeToggle" class="theme-toggle-input">
+                    <span class="theme-toggle-slider"></span>
+                    <span class="theme-icon dark-icon">🌙</span>
+                </label>
+            </div>
+        </div>
     </header>
     
     <main>
         <section id="code-input">
             <!-- Monaco Editor will replace this div -->
-            <div id="codeInput" style="height: 300px; width: 100%; border: 1px solid #ddd;"></div>
+            <div id="codeInput" style="height: 300px; width: 100%; border: 1px solid var(--border-color);"></div>
             
             <!-- Code Stats -->
             <div id="codeStats" class="code-stats">
