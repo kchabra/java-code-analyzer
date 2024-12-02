@@ -50,6 +50,24 @@ header {
     display: none; /* Hidden by default */
 }
 
+/* Mermaid diagram styling */
+#visual-container .mermaid {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 200px;
+    background-color: white;
+    padding: 1rem;
+    border-radius: 4px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+
+#visual-container svg {
+    max-width: 100%;
+    height: auto;
+    margin: auto;
+}
+
 #codeInput {
     height: 400px; 
     width: 100%; 

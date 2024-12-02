@@ -16,6 +16,19 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     });
 
+    // Function to render Mermaid diagrams
+    function renderMermaidDiagram(container, content) {
+        // Create a div with class mermaid
+        const mermaidDiv = document.createElement('div');
+        mermaidDiv.className = 'mermaid';
+        mermaidDiv.innerHTML = content;
+        container.innerHTML = ''; // Clear existing content
+        container.appendChild(mermaidDiv);
+        
+        // Call mermaid.init to render the diagram
+        mermaid.init(undefined, '.mermaid');
+    }
+
     // Analyze button functionality
     document.getElementById('analyzeBtn').addEventListener('click', async () => {
         const code = editor.getValue();
@@ -37,9 +50,10 @@ document.addEventListener('DOMContentLoaded', function () {
 
             // Handle visual output toggle
             const visualContainer = document.getElementById('visual-container');
-            if (visualOutput) {
+            if (visualOutput && data.visualAnalysis) {
                 visualContainer.style.display = 'block';
-                visualContainer.innerHTML = data.visualAnalysis;
+                // Render the Mermaid diagram
+                renderMermaidDiagram(visualContainer, data.visualAnalysis);
             } else {
                 visualContainer.style.display = 'none';
             }
@@ -107,7 +121,6 @@ document.addEventListener('DOMContentLoaded', function () {
         // Save the PDF
         doc.save('code_analysis.pdf');
     });
-    
 
     // Toggle for explanation type (High-Level/Detailed)
     document.getElementById('explanationToggle').addEventListener('change', (e) => {
