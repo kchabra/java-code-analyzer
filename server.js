@@ -4,11 +4,11 @@ const axios = require('axios');
 const app = express();
 require('dotenv').config();
 
-// Middleware
+// Setup middleware
 app.use(express.static('public'));
 app.use(bodyParser.json());
 
-// OpenAI API Integration
+// Function to analyze code
 async function callOpenAI(prompt) {
     try {
         const response = await axios.post(
@@ -27,14 +27,13 @@ async function callOpenAI(prompt) {
         );
         return response.data.choices[0].message.content;
     } catch (error) {
-        console.error("Error calling OpenAI API:", error.response?.data || error.message);
-        throw new Error("Failed to connect to OpenAI API");
+        console.error("Error:", error.response?.data || error.message);
+        throw new Error("Analysis failed");
     }
 }
 
-// Function to extract Mermaid code from response
+// Extract flowchart data
 function extractMermaidCode(response) {
-    // Look for content between ```mermaid and ``` tags
     const mermaidMatch = response.match(/```mermaid\s*([\s\S]*?)\s*```/);
     if (mermaidMatch && mermaidMatch[1]) {
         return mermaidMatch[1].trim();
@@ -42,12 +41,10 @@ function extractMermaidCode(response) {
     return null;
 }
 
-// Serve index.html
 app.get('/', (req, res) => {
     res.sendFile(__dirname + '/views/index.html');
 });
 
-// Handle POST request for code analysis
 app.post('/analyze', async (req, res) => {
     try {
         const { code, explanationType, visualOutput } = req.body;
@@ -56,53 +53,47 @@ app.post('/analyze', async (req, res) => {
             return res.status(400).json({ error: 'Code is required' });
         }
 
-        // Create prompt based on user settings
-        let prompt = `You are a Java code analysis expert. Analyze the following Java code:\n\n${code}\n\n`;
+        const validationPrompt = `Validate if input is Java code with proper syntax elements. Return only true/false.
+
+Input:
+${code}`;
+
+        const isValidCode = await callOpenAI(validationPrompt);
         
-        if (explanationType === 'high') {
-            prompt += `Provide a high-level analysis in HTML format including:
-            1. A clear <h3> heading with the code's main purpose
-            2. An organized <ul> list containing:
-               - Purpose and functionality
-               - Main components and their roles
-               - Key algorithms or patterns used
-               - Potential improvements or suggestions
-            Make the analysis clear and concise, focusing on the big picture.`;
-        } else {
-            prompt += `Provide a detailed line-by-line analysis in HTML format including:
-            1. A clear <h3> heading with the code's title
-            2. An organized <ul> list containing:
-               - Detailed explanation of each significant code line
-               - Variables, methods, and their purposes
-               - Control flow and logic explanation
-               - Time and space complexity analysis
-               - Best practices and potential improvements
-            Use <code> tags for code snippets and maintain clear formatting.`;
+        if (isValidCode.trim().toLowerCase() !== 'true') {
+            return res.json({ 
+                analysis: "<h3>Invalid Input</h3><p>The provided input does not appear to be Java code. Please submit valid Java code for analysis.</p>",
+                visualAnalysis: ''
+            });
         }
 
-        // Get initial analysis from OpenAI
+        let prompt = `Analyze this Java code:\n\n${code}\n\n`;
+        
+        if (explanationType === 'high') {
+            prompt += `Provide high-level HTML analysis with:
+            - Main purpose heading
+            - Purpose and functionality
+            - Components and roles
+            - Algorithms used
+            - Potential improvements`;
+        } else {
+            prompt += `Provide detailed HTML analysis with:
+            - Code title heading
+            - Line by line explanation
+            - Variables and methods
+            - Control flow
+            - Complexity analysis
+            - Best practices`;
+        }
+
         const analysisResponse = await callOpenAI(prompt);
         let analysis = analysisResponse;
         let visualAnalysis = '';
 
-        // If visual output is requested, get flowchart description
         if (visualOutput === true) {
-            const visualPrompt = `Create a mermaid.js flowchart that visualizes the logic and control flow of this Java code. Follow these strict requirements:
+            const visualPrompt = `Create flowchart for this Java code using mermaid.js syntax. Include start/end nodes, method calls, and decision points.
 
-1. Start with 'graph TD' (top-down graph)
-2. Use proper mermaid.js syntax for nodes and connections:
-   - Each node should have a unique ID and label: e.g., A[Start]
-   - Use --> for connections
-   - Use proper decision diamond syntax: e.g., B{Check condition}
-3. Include these elements:
-   - Start and End nodes
-   - Method calls
-   - Decision points with Yes/No branches
-   - Return statements
-
-Return ONLY the mermaid.js flowchart code wrapped in triple backticks with 'mermaid' language specifier, nothing else.
-
-Java code to visualize:
+Code:
 ${code}`;
             
             const visualResponse = await callOpenAI(visualPrompt);
@@ -111,19 +102,18 @@ ${code}`;
             if (mermaidCode) {
                 visualAnalysis = mermaidCode;
             } else {
-                console.error('Failed to extract Mermaid code from response:', visualResponse);
+                console.error('Failed to generate flowchart');
                 visualAnalysis = '';
             }
         }
 
         res.json({ analysis, visualAnalysis });
     } catch (error) {
-        console.error('Error analyzing code:', error);
-        res.status(500).json({ error: 'Failed to analyze code' });
+        console.error('Error:', error);
+        res.status(500).json({ error: 'Analysis failed' });
     }
 });
 
-// Start server
 const PORT = 3001;
 app.listen(PORT, () => {
     console.log(`Server is running on http://localhost:${PORT}`);
